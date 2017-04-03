@@ -26,17 +26,10 @@
 
 #pragma once
 
+#include <stdint.h>
+
 #include <atomic>
 #include <mutex>
-
-template<typename T>
-struct PtrWrapper {
-    PtrWrapper() : ptr(nullptr), refCount(0) {}
-    PtrWrapper(T* src) : ptr(src), refCount(1) {}
-
-    std::atomic<T*> ptr;
-    std::atomic<uint64_t> refCount;
-};
 
 template<typename T>
 class ashared_ptr {
@@ -105,6 +98,15 @@ public:
     }
 
 private:
+    template<typename T2>
+    struct PtrWrapper {
+        PtrWrapper() : ptr(nullptr), refCount(0) {}
+        PtrWrapper(T2* src) : ptr(src), refCount(1) {}
+
+        std::atomic<T2*> ptr;
+        std::atomic<uint64_t> refCount;
+    };
+
     // Atomically increase ref count and then return.
     PtrWrapper<T>* shareCurObject() {
         std::lock_guard<std::mutex> l(lock);
