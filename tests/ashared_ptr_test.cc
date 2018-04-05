@@ -64,5 +64,10 @@ int main() {
     c.compare_exchange(d, b);
 
     e.reset();
+
+    // NULL set
+    ashared_ptr<temp> f = e;
+    f.reset();
+
     return 0;
 }
